@@ -1,0 +1,2 @@
+Because the anchorImage constraint is created in the card class, but is a constraint between the card and the ui image view. 
+
