@@ -7,4 +7,5 @@ target 'TrendingFire' do
   pod "SwiftyJSON"
   pod "Alamofire"
   pod "SVProgressHUD"
+  pod 'Nuke' '~> 7.0'Unable to find a specification for `Nuke~> 7.0`
 end

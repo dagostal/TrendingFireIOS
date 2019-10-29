@@ -35,6 +35,9 @@ public protocol KolodaViewDataSource: class {
     func kolodaNumberOfCards(_ koloda: KolodaView) -> Int
     func kolodaSpeedThatCardShouldDrag(_ koloda: KolodaView) -> DragSpeed
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView
+    func koloda(_ koloda: KolodaView, descTextForCardAt index: Int) -> String
+    func koloda(_ koloda: KolodaView, rankForCardAt index: Int) -> String
+    func koloda(_ koloda: KolodaView, authorForCardAt index: Int) -> String
     func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView?
 }
 

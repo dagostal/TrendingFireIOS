@@ -37,6 +37,7 @@ private let defaultRotationAngle = CGFloat(Double.pi) / 10.0
 private let defaultScaleMin: CGFloat = 0.8
 
 
+
 private let screenSize = UIScreen.main.bounds.size
 
 //Reset animation constants
@@ -54,6 +55,9 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     public var scaleMin = defaultScaleMin
     public var cardHeightAnchor: NSLayoutDimension?
     public var cardWidthAnchor: NSLayoutDimension?
+    private var cardDescText: String?
+    private var rankTxt: String?
+    private var author: String?
     
     weak var delegate: DraggableCardDelegate? {
         didSet {
@@ -88,9 +92,11 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         super.init(frame: frame)
         self.backgroundColor = .black
         self.layer.masksToBounds = true
+        self.cardDescText = "HERE"
         
         setup()
     }
+
     
     override public var frame: CGRect {
         didSet {
@@ -141,6 +147,18 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
         self.contentView = view
         configureContentView()
     }
+    
+    //function that I made to add desc, rank, author to card
+    func descTextConfigure(_ desc:String) {
+        self.cardDescText = desc
+    }
+    func rankConfigure(_ rank:String) {
+        self.rankTxt = rank
+    }
+    func authorConfigure(_ author:String) {
+        self.author = author
+    }
+    
     
     private func configureOverlayView() {
         if let overlay = self.overlayView {
@@ -321,6 +339,8 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     @objc func tapRecognized(_ recogznier: UITapGestureRecognizer) {
         
+//        print(KolodaView.tapped)
+        
         let cardTapLocation = recogznier.location(in: self)
         let tappedBottomRightBoolean: Bool
 //
@@ -347,19 +367,58 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             leftAnchorImage?.isActive = true
             rightAnchorImage?.isActive = true
             topAnchorImage?.isActive = true
-
+            
+            
+            let rankLabel = UILabel(frame:CGRect(x: 100, y: 20, width: 150, height: 30))
+            let degreeText = self.rankTxt! + "°"
+            rankLabel.text = degreeText
+            rankLabel.textColor = .orange
+            image.addSubview(rankLabel)
+//
+            rankLabel.translatesAutoresizingMaskIntoConstraints = false
+            rankLabel.topAnchor.constraint(equalTo: image.bottomAnchor,constant:15).isActive = true
+            rankLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 175).isActive = true
+            
+            
+            let authorLabel = UILabel(frame:CGRect(x: 10, y: 40, width: 150, height: 30))
+            authorLabel.text = self.author
+            authorLabel.textColor = .white
+            image.addSubview(authorLabel)
+            
+            authorLabel.translatesAutoresizingMaskIntoConstraints = false
+            authorLabel.topAnchor.constraint(equalTo: image.bottomAnchor,constant:25).isActive = true
+            authorLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -40).isActive = true
+            
+            
         var textView = UIView(frame: CGRect(x: self.frame.minX - 10 , y: self.frame.minY, width: self.frame.width, height: self.frame.height))
-
-            textView.layer.borderColor = UIColor.white.cgColor
-            textView.layer.borderWidth = 3
-            textView.layer.cornerRadius = 13
+            //
             image.addSubview(textView)
-
+            
             textView.translatesAutoresizingMaskIntoConstraints = false
-            textView.topAnchor.constraint(equalTo: image.bottomAnchor,constant:20).isActive = true
+            textView.topAnchor.constraint(equalTo: image.bottomAnchor,constant:55).isActive = true
             textView.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant:-25).isActive = true
             textView.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: 25).isActive = true
             textView.bottomAnchor.constraint(equalTo: self.bottomAnchor,constant:-20).isActive = true
+        
+            textView.layer.borderColor = UIColor.white.cgColor
+            textView.layer.borderWidth = 3
+            textView.layer.cornerRadius = 13
+                
+                        
+            let cardLabel = UILabel(frame:CGRect(x: 10, y: 20, width: textView.frame.width, height: 20))
+            cardLabel.text = self.cardDescText
+            cardLabel.textColor = .white
+            cardLabel.backgroundColor = .black
+            cardLabel.contentMode = .scaleAspectFill
+            textView.addSubview(cardLabel)
+            
+            
+            cardLabel.translatesAutoresizingMaskIntoConstraints = false
+            cardLabel.topAnchor.constraint(equalTo: textView.topAnchor,constant:15).isActive = true
+            cardLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor,constant:10).isActive = true
+            cardLabel.widthAnchor.constraint(equalToConstant: 275).isActive = true
+            cardLabel.heightAnchor.constraint(equalToConstant: 100).isActive = true
+            
 //
 
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 11, initialSpringVelocity: 1, options: .curveEaseIn, animations: {

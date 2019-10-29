@@ -16,14 +16,16 @@ class FireBoard: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @objc func backTap() {
         print("going back to main screen.!")
-        self.performSegue(withIdentifier: "backToMainFromLeaderBoard", sender: self)
+        dismiss(animated:true,completion:nil)
     }
     
-    let animals: [String] = ["Horse", "Cow", "Camel", "Sheep", "Goat"]
+    var descTexts: [String] = []
+    var ranks: [String] = []
+    var authors: [String] = []
     var imagesForTable: [UIImage] = []
     
     
-    func setUpTable(arr:[UIImage]){
+    func setUpTable(arr:[UIImage]) {
 
             for index in 0..<arr.count {
                 imagesForTable.append(arr[index])
@@ -40,35 +42,69 @@ class FireBoard: UIViewController, UITableViewDelegate, UITableViewDataSource {
   
     
     func getCards() {
-        var imageArray: [UIImage] = []
-        Alamofire.request("https://frozen-temple-71617.herokuapp.com/cards", method:.get).responseJSON {
+//        var imageArray: [UIImage] = []
+        var dictArry : [[String:String]] = []
+        Alamofire.request("https://agile-dusk-73308.herokuapp.com/cards", method:.get).responseJSON {
             response in
             if response.result.isSuccess {
                 print("SUCCESS!")
-                var responseData = JSON(response.result.value!)
+                let responseData = JSON(response.result.value!)
                 for index in 0..<responseData.count {
-                    //                    let urlString = String(describing: responseData[index]["pic"])
-                    //                    let url = NSURL(string: urlString)! as URL
-                    //                    let imageData: NSData = NSData(contentsOf: url)
-                    //                    array.append(UIImage(data:imageData)
-                    var image: UIImage?
-                    let urlString = responseData[index]["pic"]
-                    let url = NSURL(string: String(describing: responseData[index]["pic"]))! as URL
-                    if let imageData: NSData = NSData(contentsOf: url) {
-                        image = UIImage(data: imageData as Data)
-                    }
-                    imageArray.append(image!)
+//                    var image: UIImage?
+//                    let url = NSURL(string: String(describing: responseData[index]["pic"]))! as URL
+//                    if let imageData: NSData = NSData(contentsOf: url) {
+//                        image = UIImage(data: imageData as Data)
+//                    }
+//                    let descTextString = String(describing:responseData[index]["desc"])
+                    let rank = String(describing:responseData[index]["rank"])
+//                    let author = String(describing:responseData[index]["author"])
+                    let urlString = String(describing:responseData[index]["pic"])
                     
-                }
+                    dictArry.append([urlString:urlString,rank:rank])
+                    
+                    
+                    
+                    //too tired to do this but i need to 1) find a libary that will rsort the dicitonary and then push each into a sepereate array (temp awa rn,,,edventually need to just figure out correct way)
+                    //if i dont want to find a libarry i can just writie it out but its going ot be annyoyinbgecuase i will need to use pointers and move the items in the dict arrray around and push stuff and all that which seems fun to do but i dont have the time
+                    var imgArr : [String] = []
+                    
+                    while(dictArry.count < 1){
+                        
+                        if(dictArry[0]["rank"]! > dictArry[1]["rank"]!) {
+                            imgArr.append(dictArry[0]["urlString"]!)
+                            //then move
+                            } else {
+                            
+                        }
+                    }
+                        
+                    
+                    
+                    
+                    
+//
+//                        imageArray.append(image!)
+//
+//                        self.descTexts.append(descTextString)
+//                        self.ranks.append(rank)
+//                        self.authors.append(author)
+//                }
                 print("got urls")
-                self.setUpTable(arr:imageArray)
+//                self.setUpTable(arr:imageArray)
             }
-            else {
-                print("failure to retreieve cards")
-                print(response.result.error!)
-            }
+            //sort the dictionary!, then throw in respective arrays
+            print(dictArry)
+                
+
+                
+                
+//            else {
+//                print("failure to retreieve cards")
+//                print(response.result.error!)
+//            }
         }
     }
+}
     
     
     
@@ -107,6 +143,7 @@ class FireBoard: UIViewController, UITableViewDelegate, UITableViewDataSource {
         // Do any additional setup after loading the view.
     }
     override func viewDidLoad() {
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         getCards()
         setUpLoadingView()
     }
@@ -119,14 +156,14 @@ class FireBoard: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         // Configure the cell’s contents.
     
-        cell.textLabel!.text = animals[indexPath.row]
+        cell.textLabel!.text = descTexts[indexPath.row]
         cell.imageView!.image = imagesForTable[indexPath.row]
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let tappedCell = tableView.cellForRow(at:indexPath)
-        addCardView(card:animals[indexPath.row],imageName:imagesForTable[indexPath.row])
+        addCardView(card:descTexts[indexPath.row],imageName:imagesForTable[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView,heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -177,8 +214,6 @@ class FireBoard: UIViewController, UITableViewDelegate, UITableViewDataSource {
         cardName.bottomAnchor.constraint(equalTo: newView.bottomAnchor,constant:-20).isActive = true
         
         
-        
-        
         self.view.addSubview(newView)
         
         newView.layer.borderColor = UIColor.white.cgColor
@@ -208,10 +243,10 @@ class FireBoard: UIViewController, UITableViewDelegate, UITableViewDataSource {
         tableViewBoard.layer.borderWidth = 2.0
     }
     private func setUpLoadingView() {
-        loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 75).isActive = true
-        loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -75).isActive = true
+        loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 50).isActive = true
+        loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
         loadingView.topAnchor.constraint(equalTo: view.topAnchor, constant: 250).isActive = true
-        loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -250).isActive = true
+        loadingView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.6).isActive = true
     }
 
 

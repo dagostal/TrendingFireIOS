@@ -12,91 +12,134 @@ import SwiftyJSON
 
 
 
+
 var numberOfCards: Int = 5
-var imageUrls: [UIImage] = []
 
 class ViewController: UIViewController {
     
+        fileprivate var dataSource: [[String:String]] = {
+            var array: [[String:String]] = []
+            for index in 0..<numberOfCards {
+                array.append(["img":"image\((index + 1))"])
+            }
+            return array
+        }()
     
-    @objc func profileImageTap() {
-        self.performSegue(withIdentifier: "toProfile", sender: self)
-    }
+    fileprivate var imageArr: [UIImage] = []
+    fileprivate var tapped: Bool = false
+    //
     
-    @objc func fireBoardButtonTap() {
-        self.performSegue(withIdentifier: "toFireBoard", sender: self)
-    }
     
-    func assignCards(arr: [UIImage],reff:Bool) {
+    func assignCards(arr: [[String:String]],reff:Bool) {
         if(reff == true) {
-            //should i replace the data source or append? i would think replace, but example is append...need to look at logic behinf kolaoda count and datssource count..
-//            myKolodaView.countOfCards = 0
-//            myKolodaView.currentCardIndex = 0
             for i in 0..<arr.count {
                 dataSource.append(arr[i])
             }
-            //self.dataSource = arr
             let position = myKolodaView.currentCardIndex
             myKolodaView.insertCardAtIndexRange(position..<position + 8, animated: true)
             loadingView.removeFromSuperview()
         } else {
             self.dataSource = arr
             print("setting up cards...")
-            view.addSubview(myKolodaView)
-            loadingView.removeFromSuperview()
             setUpKoloda()
             myKolodaView.delegate = self
             myKolodaView.dataSource = self
             myKolodaView.visibleCardsDirection = .top
+            loadingView.removeFromSuperview()
         }
     }
     
-    
-    fileprivate var dataSource: [UIImage] = {
-        var array: [UIImage] = []
-        for index in 0..<numberOfCards {
-            array.append(UIImage(named: "image1")!)
-        }
-        return array
-    }()
-    
-    
+
     func getCards(refresh:Bool) {
-        var array: [UIImage] = []
-                Alamofire.request("https://frozen-temple-71617.herokuapp.com/cards", method:.get).responseJSON {
+        if(refresh == true) {
+            var cardArray: [[String:String]] = []
+            Alamofire.request("https://agile-dusk-73308.herokuapp.com/cards", method:.get).responseJSON {
+                response in
+                if response.result.isSuccess {
+                    print("SUCCESS!")
+                    let responseData = JSON(response.result.value!)
+                    for index in 0..<responseData.count {
+                        let urlString = String(describing: responseData[index]["pic"])
+                        let descText = String(describing: responseData[index]["desc"])
+                        let rankTxt = String(describing: responseData[index]["rank"])
+                        let authorTxt = String(describing: responseData[index]["author"])
+                        let card = [ "img" : urlString,"desc" : descText,"rank":rankTxt,"author":authorTxt]
+                        cardArray.append(card)
+                        
+                        var imageForCard: UIImage?
+                        let url = NSURL(string: urlString)! as URL
+                        if let imageData: NSData = NSData(contentsOf: url) {
+                                print("generating image..")
+                                imageForCard = UIImage(data: imageData as Data)
+                        }
+                        self.imageArr.append(imageForCard!)
+                    }
+                    
+                    //the UIImages need to be premade...ideally here...so the loadscreen will be viewed as x num of cards pulled from database are turned into UIImage objs, so there is no lag with the swipe. what data sctructure would best do this? i want to ideally keep the images with the desc,rank,author, ect, but image in uiimage and others are strings. dictionaries?
+                  
+                    
+                    self.assignCards(arr:cardArray,reff:refresh)
+                } else {
+                    print("error in request")
+                    return;
+                }
+            }
+        }
+        else {
+        var cardArray: [[String:String]] = []
+                Alamofire.request("https://agile-dusk-73308.herokuapp.com/cards", method:.get).responseJSON {
                     response in
                     if response.result.isSuccess {
-                        print("SUCCESS!")
-                        var responseData = JSON(response.result.value!)
+                        print("success! got data")
+                        let responseData = JSON(response.result.value!)
                         for index in 0..<responseData.count {
-        //                    let urlString = String(describing: responseData[index]["pic"])
-        //                    let url = NSURL(string: urlString)! as URL
-        //                    let imageData: NSData = NSData(contentsOf: url)
-        //                    array.append(UIImage(data:imageData)
-                            var image: UIImage?
-                            let urlString = responseData[index]["pic"]
-        
-                            let url = NSURL(string: String(describing: responseData[index]["pic"]))! as URL
-                            if let imageData: NSData = NSData(contentsOf: url) {
-                                image = UIImage(data: imageData as Data)
-                            }
-                            array.append(image!)
+                            let urlString = String(describing: responseData[index]["pic"])
+                            let descText = String(describing: responseData[index]["desc"])
+                            let rankTxt = String(describing: responseData[index]["rank"])
+                            let authorTxt = String(describing: responseData[index]["author"])
+                            let card = [ "img" : urlString,"desc" : descText,"rank":rankTxt,"author":authorTxt]
+                            cardArray.append(card)
+                            
+                             var imageForCard: UIImage?
+                             let url = NSURL(string: urlString)! as URL
+                             if let imageData: NSData = NSData(contentsOf: url) {
+                                        print("generating image..")
+                                        imageForCard = UIImage(data: imageData as Data)
+                                }
+                        self.imageArr.append(imageForCard!)
+                            
                         }
-                        print("got urls")
-                        self.assignCards(arr:array,reff:refresh)
-                    }
-                    else {
-                        print("failure to retreieve cards")
-                        print(response.result.error!)
+
+                        //the UIImages need to be premade...ideally here...so the loadscreen will be viewed as x num of cards pulled from database are turned into UIImage objs, so there is no lag with the swipe. what data sctructure would best do this? i want to ideally keep the images with the desc,rank,author, ect, but image in uiimage and others are strings. dictionaries?
+                        self.assignCards(arr:cardArray,reff:refresh)
+                    } else {
+                        print("error in request")
+                        return;
                     }
                 }
         }
+    }
     
 //
+    @objc func profileImageTap() {
+        self.performSegue(withIdentifier: "move1", sender: self)
+    }
+    
+    @objc func fireBoardButtonTap() {
+        self.performSegue(withIdentifier: "move2", sender: self)
+    }
+    
+    @objc func rightButtonTap() {
+        myKolodaView.swipe(.right)
+    }
 
+    @objc func leftButtonTap() {
+        myKolodaView.swipe(.left)
+    }
+//
     
     let profileButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor.green
         button.setImage(UIImage(named: "profileicon"), for: .normal)
         button.addTarget(self, action: #selector(profileImageTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -105,14 +148,37 @@ class ViewController: UIViewController {
     
     let fireBoardButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor.yellow
-//        button.setImage(UIImage(named: "profileicon"), for: .normal)
+        button.setImage(UIImage(named: "rank"), for: .normal)
         button.addTarget(self, action: #selector(fireBoardButtonTap), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    let trendingFireLabelView: UILabel = {
+        let label = UILabel()
+        label.text = "Trending Fire"
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
+    let swipeRightButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .red
+        button.addTarget(self, action: #selector(rightButtonTap), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    let swipeLeftButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .blue
+        button.addTarget(self, action: #selector(leftButtonTap), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+
 
   
 
@@ -120,49 +186,18 @@ class ViewController: UIViewController {
 //    @IBOutlet weak var myKolodaView: KolodaView!
     let myKolodaView: KolodaView = {
         let kView = KolodaView()
-        kView.layer.borderColor = UIColor.red.cgColor
+        kView.layer.borderColor = UIColor.green.cgColor
+        kView.layer.backgroundColor = UIColor.black.cgColor
         kView.translatesAutoresizingMaskIntoConstraints = false
         return kView
     }()
     
     let loadingView: UIView = {
         let lView = UIView()
-        lView.layer.borderColor = UIColor.green.cgColor
-        lView.backgroundColor = .red
+        lView.backgroundColor = .blue
         lView.translatesAutoresizingMaskIntoConstraints = false
         return lView
     }()
-//
-//    fileprivate var dataSource: [UIImage] = {
-//        var array: [UIImage] = []
-//        Alamofire.request("https://frozen-temple-71617.herokuapp.com/cards", method:.get).responseJSON {
-//            response in
-//            if response.result.isSuccess {
-//                print("SUCCESS!")
-//                var responseData = JSON(response.result.value!)
-//                for index in 0..<responseData.count {
-////                    let urlString = String(describing: responseData[index]["pic"])
-////                    let url = NSURL(string: urlString)! as URL
-////                    let imageData: NSData = NSData(contentsOf: url)
-////                    array.append(UIImage(data:imageData)
-//                    var image: UIImage?
-//                    let urlString = responseData[index]["pic"]
-//
-//                    let url = NSURL(string: String(describing: responseData[index]["pic"]))! as URL
-//                    if let imageData: NSData = NSData(contentsOf: url) {
-//                        image = UIImage(data: imageData as Data)
-//                    }
-//                array.append(image!)
-//                }
-//            }
-//            else {
-//                print("failure to retreieve cards")
-//                print(response.result.error!)
-//            }
-//        }
-//        print("outside of while loop")
-//        return array
-//    }()
     
     // MARK: Lifecycle
 
@@ -171,29 +206,35 @@ class ViewController: UIViewController {
         view.addSubview(profileButton)
         view.addSubview(fireBoardButton)
         view.addSubview(loadingView)
+        view.addSubview(trendingFireLabelView)
+        view.addSubview(swipeLeftButton)
+        view.addSubview(swipeRightButton)
+        view.addSubview(myKolodaView)
+        getCards(refresh: false)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpProfileButton()
-        setUpFireBoardButton()
         setUpLoadingView()
-        getCards(refresh: false)
+        setUpFireBoardButton()
+        setUpTrendingLabel()
+        setUpLeftButton()
+        setUpRightButton()
         self.modalTransitionStyle = UIModalTransitionStyle.flipHorizontal
     }
     
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        print("memory overloas")
         //dispose of resources before moving to the new controller
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "toProfile") {
             let destinationViewControler = segue.destination as! ProfileViewControleler
-            destinationViewControler.textPassedOver = "Alex"
         }
     }
-
     var leftAnchor: NSLayoutConstraint?
     var rightAnchor: NSLayoutConstraint?
     var topAnchor: NSLayoutConstraint?
@@ -202,22 +243,25 @@ class ViewController: UIViewController {
     var widthAnchor: NSLayoutConstraint?
     var heightAnchor: NSLayoutConstraint?
     
+    
     private func setUpKoloda(){
-        
-        leftAnchor = myKolodaView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 75)
+        leftAnchor = myKolodaView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 50)
         leftAnchor?.isActive = true
-        rightAnchor = myKolodaView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -75)
+        rightAnchor = myKolodaView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50)
         rightAnchor?.isActive = true
-        topAnchor = myKolodaView.topAnchor.constraint(equalTo: view.topAnchor, constant: 250)
+        topAnchor = myKolodaView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150)
         topAnchor?.isActive = true
-        bottomAnchor = myKolodaView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -250)
-        bottomAnchor?.isActive = true
+        heightAnchor = myKolodaView.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.5)
+        heightAnchor?.isActive = true
     }
+    
+    
+    
     private func setUpLoadingView() {
-        loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 75).isActive = true
-        loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -75).isActive = true
-        loadingView.topAnchor.constraint(equalTo: view.topAnchor, constant: 250).isActive = true
-        loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -250).isActive = true
+        loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 50).isActive = true
+        loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
+        loadingView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
+        loadingView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5).isActive = true
     }
     private func setUpProfileButton(){
         profileButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 25).isActive = true
@@ -231,56 +275,83 @@ class ViewController: UIViewController {
         fireBoardButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
         fireBoardButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
     }
+    private func setUpTrendingLabel(){
+        trendingFireLabelView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 150).isActive = true
+        trendingFireLabelView.topAnchor.constraint(equalTo: view.topAnchor, constant: 50).isActive = true
+        trendingFireLabelView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        trendingFireLabelView.widthAnchor.constraint(equalToConstant: 100).isActive = true
+    }
+
+    private func setUpLeftButton(){
+        swipeLeftButton.leadingAnchor.constraint(equalTo:view.leadingAnchor,constant: 50).isActive = true
+        swipeLeftButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -75).isActive = true
+        swipeLeftButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.08).isActive = true
+        swipeLeftButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.2).isActive = true
+    }
+//
+    private func setUpRightButton(){
+        swipeRightButton.trailingAnchor.constraint(equalTo:view.trailingAnchor,constant: -50).isActive = true
+        swipeRightButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -75).isActive = true
+        swipeRightButton.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.08).isActive = true
+        swipeRightButton.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.2).isActive = true
+    }
+
+//
+//
 
 
     
+    
     private func enlargeKoloda(){
+        
         leftAnchor?.isActive = false
-        bottomAnchor?.isActive = false
         rightAnchor?.isActive = false
         topAnchor?.isActive = false
-//
-//        heightAnchor?.isActive = true
-//
-//        widthAnchor?.isActive = true
+        heightAnchor?.isActive = false
+        
+
         leftAnchor = myKolodaView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant:15)
         leftAnchor?.isActive = true
         rightAnchor = myKolodaView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -15)
         rightAnchor?.isActive = true
-        topAnchor = myKolodaView.topAnchor.constraint(equalTo: view.topAnchor,constant: 150)
+        topAnchor = myKolodaView.topAnchor.constraint(equalTo: view.topAnchor,constant: 125)
         topAnchor?.isActive = true
-        bottomAnchor = myKolodaView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -100)
-        bottomAnchor?.isActive = true
-        
-        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
-            self.view.layoutIfNeeded()
-        }, completion: nil)
-        
+        heightAnchor = myKolodaView.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.8 )
+        heightAnchor?.isActive = true
+                
+                UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: nil)
+              
     }
+
+//
     
-    
-    
-    
+
     private func shrinkKoloda(){
+        self.tapped = false
+       
         leftAnchor?.isActive = false
-        bottomAnchor?.isActive = false
         rightAnchor?.isActive = false
         topAnchor?.isActive = false
-        
-        leftAnchor = myKolodaView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 75)
+        heightAnchor?.isActive = false
+             
+        leftAnchor = myKolodaView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant:50)
         leftAnchor?.isActive = true
-        rightAnchor = myKolodaView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -75)
+        rightAnchor = myKolodaView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50)
         rightAnchor?.isActive = true
-        topAnchor = myKolodaView.topAnchor.constraint(equalTo: view.topAnchor, constant: 250)
+        topAnchor = myKolodaView.topAnchor.constraint(equalTo: view.topAnchor,constant: 150)
         topAnchor?.isActive = true
-        bottomAnchor = myKolodaView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -250)
-        bottomAnchor?.isActive = true
-        
+        heightAnchor = myKolodaView.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.5 )
+        heightAnchor?.isActive = true
+
         UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseIn, animations: {
             self.view.setNeedsLayout()
         }, completion: nil)
     }
-    // MARK: IBActions
+    
+    
+    
 }
 
 // MARK: KolodaViewDelegate
@@ -288,46 +359,41 @@ class ViewController: UIViewController {
 extension ViewController: KolodaViewDelegate {
     //
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
-//        let position = myKolodaView.currentCardIndex
-//        for i in 1...4 {
-//            dataSource.append(UIImage(named: "image1")!)
-//        }
-//        myKolodaView.insertCardAtIndexRange(position..<position + 4, animated: true)
-////        getCards(refresh : true)
-        view.addSubview(loadingView)
-        setUpLoadingView()
         getCards(refresh: true)
-        
     }
     
     
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int,tappedBottomRight: Bool) {
-        
-        let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .light)
-        if(tappedBottomRight == true) {
-            impactFeedbackgenerator.prepare()
-            impactFeedbackgenerator.impactOccurred()
-            enlargeKoloda()
-        }
+
+            if(self.tapped == false){
+                let impactFeedbackgenerator = UIImpactFeedbackGenerator(style: .light)
+                if(tappedBottomRight == true) {
+                    impactFeedbackgenerator.prepare()
+                    impactFeedbackgenerator.impactOccurred()
+                    enlargeKoloda()
+                    self.tapped = true
+                }
+            } else {
+                print(self.tapped)
+                print("already tapped")
+            }
     }
     func koloda(_ koloda: KolodaView, allowedDirectionsForIndex index: Int) -> [SwipeResultDirection] {
         return [.up,.left,.right]
     }
     func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {
-        
+        shrinkKoloda()
         let params: [String: String] = [
             "swipe" : direction.rawValue,
             "card" : String(myKolodaView.currentCardIndex)
         ]
-        
-        Alamofire.request("https://frozen-temple-71617.herokuapp.com/rankCard", method:.post,parameters: params)
+        Alamofire.request("https://agile-dusk-73308.herokuapp.com/cards", method:.post,parameters: params)
             .responseJSON {
                 response in
                 if response.result.isSuccess {
                     print("SUCCESS!")
                 }
         }
-       shrinkKoloda()
     }
 }
 
@@ -344,8 +410,26 @@ extension ViewController: KolodaViewDataSource {
     }
     
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
-        return UIImageView(image: dataSource[Int(index)])
+//        var imageForCard: UIImage?
+//        let urlString = dataSource[index]["img"]!
+//
+//        let url = NSURL(string: String(describing: urlString))! as URL
+//        if let imageData: NSData = NSData(contentsOf: url) {
+//                        print("generating image..")
+//                        imageForCard = UIImage(data: imageData as Data)
+//                }
+        return UIImageView(image:imageArr[index])
+//        return UIImageView(image: imageForCard)
     }
+    func koloda(_ koloda: KolodaView, descTextForCardAt index: Int) -> String {
+        return dataSource[index]["desc"]!
+    }
+    func koloda(_ koloda: KolodaView, rankForCardAt index: Int) -> String {
+           return dataSource[index]["rank"]!
+       }
+    func koloda(_ koloda: KolodaView, authorForCardAt index: Int) -> String {
+           return dataSource[index]["author"]!
+       }
 //
 //    func koloda(_ koloda: KolodaView, viewForCardOverlayAt index: Int) -> OverlayView? {
 ////        return Bundle.main.loadNibNamed("OverlayView", owner: self, options: nil)?[0] as? OverlayView

@@ -12,12 +12,15 @@ import SwiftyJSON
 
 class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewDataSource {
     
+    var descArray: [String] = []
+    var rankArray: [String] = []
+    var authorArray: [String] = []
+    
     var textPassedOver: String?
     
     
     @objc func backFireTap() {
-        print("going back to main screen.!")
-        self.performSegue(withIdentifier: "backToMainFromProfile", sender: self)
+        dismiss(animated:true,completion:nil)
     }
     
     @objc func createCard() {
@@ -46,7 +49,7 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
     
     
     var imagesInPersonalBoard: [UIImage] = []
-    let animals: [String] = ["Horse", "Cow", "Camel", "Sheep", "Goat"]
+ 
     
     private func setUpTable(arr:[UIImage]){
         
@@ -58,7 +61,6 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
         tableViewBoard.delegate = self
         tableViewBoard.dataSource = self
         tableViewBoard.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        loadingView.removeFromSuperview()
         setUpTableView()
     }
     
@@ -66,7 +68,7 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
     
     private func getCards() {
         var imageArray: [UIImage] = []
-        Alamofire.request("https://frozen-temple-71617.herokuapp.com/cards", method:.get).responseJSON {
+        Alamofire.request("https://agile-dusk-73308.herokuapp.com/cards", method:.get).responseJSON {
             response in
             if response.result.isSuccess {
                 print("SUCCESS!")
@@ -83,6 +85,9 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
                         image = UIImage(data: imageData as Data)
                     }
                     imageArray.append(image!)
+                    self.descArray.append(String(describing: responseData[index]["desc"]))
+                    self.rankArray.append(String(describing: responseData[index]["rank"]))
+                    self.authorArray.append(String(describing: responseData[index]["author"]))
                     
                 }
                 print("got urls")
@@ -106,11 +111,11 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
         super.loadView()
         getCards()
         view.addSubview(backToFireButton)
-        view.addSubview(createCardButton)
+//        view.addSubview(createCardButton)
         view.addSubview(loadingView)
         setUpBackButton()
         setUpLoadingView()
-        setUpCreateCardButton()
+//        setUpCreateCardButton()
 //        view.addSubview(tableViewBoard)
 //        tableViewBoard.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 //        tableViewBoard.delegate = self
@@ -142,7 +147,7 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let tappedCell = tableView.cellForRow(at:indexPath)
-        addCardView(card:animals[indexPath.row],imageName:imagesInPersonalBoard[indexPath.row])
+        addCardView(card:indexPath.row,imageName:imagesInPersonalBoard[indexPath.row])
     }
     
     func tableView(_ tableView: UITableView,heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -161,7 +166,7 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         // Configure the cell’s contents.
         
-        cell.textLabel!.text = animals[indexPath.row]
+        cell.textLabel!.text = descArray[indexPath.row]
         cell.imageView!.image = imagesInPersonalBoard[indexPath.row]
         return cell
     }
@@ -189,15 +194,16 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
     let loadingView: UIView = {
         let lView = UIView()
         lView.layer.borderColor = UIColor.green.cgColor
-        lView.backgroundColor = .red
+        lView.backgroundColor = .green
         lView.translatesAutoresizingMaskIntoConstraints = false
         return lView
     }()
     
     
-    func addCardView(card:String,imageName:UIImage) {
+    func addCardView(card:Int,imageName:UIImage) {
         let newView = UIView(frame:CGRect(x: 200, y: 300, width: 0, height: 0))
-        newView.backgroundColor = UIColor.yellow
+        newView.backgroundColor = UIColor.black
+        
         let cardTap = UITapGestureRecognizer(target: self, action: #selector(self.exitCard(_:)))
         newView.addGestureRecognizer(cardTap)
         
@@ -205,30 +211,14 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
         newView.addSubview(imageHolder)
         imageHolder.translatesAutoresizingMaskIntoConstraints = false
         
-        imageHolder.bottomAnchor.constraint(equalTo: newView.bottomAnchor,constant: -200).isActive = true
         imageHolder.leadingAnchor.constraint(equalTo: newView.leadingAnchor,constant: 35).isActive = true
         imageHolder.trailingAnchor.constraint(equalTo: newView.trailingAnchor,constant: -35).isActive = true
         imageHolder.topAnchor.constraint(equalTo: newView.topAnchor,constant: 15).isActive = true
+        imageHolder.heightAnchor.constraint(equalTo: newView.heightAnchor,multiplier: 0.5).isActive = true
         
-        
-        
-        let cardName = UILabel()
-        cardName.text = card
-        cardName.textAlignment = .center
-        
-        cardName.layer.borderColor = UIColor.white.cgColor
-        cardName.layer.borderWidth = 3
-        cardName.layer.cornerRadius = 13
-        newView.addSubview(cardName)
-        
-        cardName.translatesAutoresizingMaskIntoConstraints = false
-        cardName.topAnchor.constraint(equalTo: imageHolder.bottomAnchor,constant:20).isActive = true
-        cardName.trailingAnchor.constraint(equalTo: newView.trailingAnchor,constant:-25).isActive = true
-        cardName.leadingAnchor.constraint(equalTo: newView.leadingAnchor,constant: 25).isActive = true
-        cardName.bottomAnchor.constraint(equalTo: newView.bottomAnchor,constant:-20).isActive = true
-        
-        
-        
+//
+//
+//
         
         self.view.addSubview(newView)
         
@@ -239,8 +229,62 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
         newView.translatesAutoresizingMaskIntoConstraints = false
         newView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant:15).isActive = true
         newView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -15).isActive = true
-        newView.topAnchor.constraint(equalTo: view.topAnchor,constant: 150).isActive = true
-        newView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -100).isActive = true
+        newView.topAnchor.constraint(equalTo: view.topAnchor,constant: 70).isActive = true
+        newView.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.8).isActive = true
+        
+        
+        
+        let rankLabel = UILabel(frame:CGRect(x: 100, y: 20, width: 150, height: 30))
+        let degreeText = self.rankArray[card] + "°"
+        rankLabel.text = degreeText
+        rankLabel.textColor = .orange
+        newView.addSubview(rankLabel)
+        //
+        rankLabel.translatesAutoresizingMaskIntoConstraints = false
+        rankLabel.topAnchor.constraint(equalTo: imageHolder.bottomAnchor,constant:15).isActive = true
+        rankLabel.leadingAnchor.constraint(equalTo: newView.leadingAnchor, constant: 175).isActive = true
+                    
+        let authorLabel = UILabel(frame:CGRect(x: 10, y: 40, width: 150, height: 30))
+        authorLabel.text = self.authorArray[card]
+        authorLabel.textColor = .white
+        newView.addSubview(authorLabel)
+                    
+        authorLabel.translatesAutoresizingMaskIntoConstraints = false
+        authorLabel.topAnchor.constraint(equalTo: imageHolder.bottomAnchor,constant:25).isActive = true
+        authorLabel.trailingAnchor.constraint(equalTo: newView.trailingAnchor, constant: -40).isActive = true
+                    
+ 
+        
+    var textView = UIView(frame: CGRect(x: newView.frame.minX - 10 , y: newView.frame.minY, width: newView.frame.width, height: newView.frame.height))
+            newView.addSubview(textView)
+            
+            textView.translatesAutoresizingMaskIntoConstraints = false
+            textView.topAnchor.constraint(equalTo: imageHolder.bottomAnchor,constant:55).isActive = true
+            textView.trailingAnchor.constraint(equalTo: newView.trailingAnchor,constant:-25).isActive = true
+            textView.leadingAnchor.constraint(equalTo: newView.leadingAnchor,constant: 25).isActive = true
+        textView.heightAnchor.constraint(equalTo: newView.heightAnchor,multiplier:0.3).isActive = true
+        
+            textView.layer.borderColor = UIColor.white.cgColor
+            textView.layer.borderWidth = 3
+            textView.layer.cornerRadius = 13
+                
+                        
+            let cardLabel = UILabel(frame:CGRect(x: 10, y: 20, width: textView.frame.width, height: 20))
+            cardLabel.text = self.descArray[card]
+            cardLabel.textColor = .white
+            cardLabel.backgroundColor = .black
+            cardLabel.contentMode = .scaleAspectFill
+            textView.addSubview(cardLabel)
+            
+            
+            cardLabel.translatesAutoresizingMaskIntoConstraints = false
+            cardLabel.topAnchor.constraint(equalTo: textView.topAnchor,constant:15).isActive = true
+            cardLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor,constant:10).isActive = true
+            cardLabel.widthAnchor.constraint(equalToConstant: 275).isActive = true
+            cardLabel.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        
+        
         
         
         
@@ -254,9 +298,12 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
         tableViewBoard.translatesAutoresizingMaskIntoConstraints = false
         tableViewBoard.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 50).isActive = true
         tableViewBoard.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
-        tableViewBoard.topAnchor.constraint(equalTo: view.topAnchor, constant: 350).isActive = true
-        tableViewBoard.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -100).isActive = true
+        tableViewBoard.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
+        tableViewBoard.heightAnchor.constraint(equalTo: view.heightAnchor,multiplier: 0.6).isActive = true
+
         tableViewBoard.layer.borderWidth = 2.0
+        
+        loadingView.removeFromSuperview()
     }
     func setUpBackButton(){
         backToFireButton.translatesAutoresizingMaskIntoConstraints = false
@@ -267,24 +314,21 @@ class ProfileViewControleler: UIViewController,UITableViewDelegate, UITableViewD
         backToFireButton.layer.borderWidth = 2.0
     }
     private func setUpLoadingView() {
-        loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 75).isActive = true
-        loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -75).isActive = true
-//        loadingView.topAnchor.constraint(equalTo: createCardButton.bottomAnchor, constant: 250).isActive = true
-        loadingView.bottomAnchor.constraint(equalTo: view.bottomAnchor,constant: -50).isActive = true
+        loadingView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 50).isActive = true
+        loadingView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
+        loadingView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
+        loadingView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.6).isActive = true
     }
     
-    func setUpCreateCardButton() {
-        
-        createCardButton.translatesAutoresizingMaskIntoConstraints = false
-        createCardButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 50).isActive = true
-        createCardButton.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
-        createCardButton.topAnchor.constraint(equalTo: backToFireButton.bottomAnchor, constant: 50).isActive = true
-        createCardButton.bottomAnchor.constraint(equalTo: loadingView.topAnchor,constant: -50).isActive = true
-        createCardButton.layer.borderWidth = 2.0
-    }
-    
-    
-    
+//    func setUpCreateCardButton() {
+//        createCardButton.translatesAutoresizingMaskIntoConstraints = false
+//        createCardButton.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 50).isActive = true
+//        createCardButton.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -50).isActive = true
+//        createCardButton.topAnchor.constraint(equalTo: backToFireButton.bottomAnchor, constant: 50).isActive = true
+//        createCardButton.bottomAnchor.constraint(equalTo: loadingView.topAnchor,constant: -25).isActive = true
+//        createCardButton.layer.borderWidth = 2.0
+//    }
+//
     
     
 }
