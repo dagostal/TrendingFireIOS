@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="rI7-AS-cVF">
+    <device id="retina5_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="fG1-Ab-Vgi">
+            <objects>
+                <navigationController navigationBarHidden="YES" id="rI7-AS-cVF" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="PWh-kb-Vjc">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ZUe-fw-RTd"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DD8-nZ-dvC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4962" y="-1586"/>
+        </scene>
+        <!--Signup Controller-->
+        <scene sceneID="rUi-zv-rzD">
+            <objects>
+                <viewController id="p3v-RB-E6F" customClass="SignupController" customModule="TrendingFire" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="SzU-4m-Nfe"/>
+                        <viewControllerLayoutGuide type="bottom" id="ffM-rn-n7D"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bzn-fP-5iM">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="u0t-mn-uAJ"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="show" identifier="signupToMain" id="ydB-6W-8ZV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aDD-uK-52t" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4512" y="-703"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="BYZ-38-t0r" customClass="ViewController" customModule="TrendingFire" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="s3g-sO-Dfb"/>
+                        <viewControllerLayoutGuide type="bottom" id="A4P-EP-qDf"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yvj-R5-q7P">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Ndv-Qn-hjj"/>
+                    <connections>
+                        <segue destination="fqO-Bi-sGF" kind="custom" identifier="move1" customClass="secondCustomSegue" customModule="TrendingFire" customModuleProvider="target" id="uY6-0V-xah"/>
+                        <segue destination="0hg-Qe-okT" kind="custom" identifier="move2" customClass="firstCustomSegue" customModule="TrendingFire" customModuleProvider="target" id="r8w-w4-hd3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3306" y="-1617"/>
+        </scene>
+        <!--Profile Info-->
+        <scene sceneID="kTZ-1W-kOt">
+            <objects>
+                <viewController id="Ygt-HO-Bw2" customClass="ProfileInfo" customModule="TrendingFire" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="sbr-iz-Ont"/>
+                        <viewControllerLayoutGuide type="bottom" id="TmE-7I-Zjs"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="fLV-42-sAO">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="6u4-no-KSq"/>
+                    <connections>
+                        <segue destination="p3v-RB-E6F" kind="presentation" identifier="profiletosignup" modalPresentationStyle="fullScreen" id="LI9-id-3jC"/>
+                        <segue destination="8kt-15-s2w" kind="show" identifier="profiletologin" id="2xS-pe-910"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QeV-WT-tPH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3725" y="790"/>
+        </scene>
+        <!--Fire Board-->
+        <scene sceneID="tfM-yM-hyU">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="0hg-Qe-okT" customClass="FireBoard" customModule="TrendingFire" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bzx-Vn-ji7"/>
+                        <viewControllerLayoutGuide type="bottom" id="9gD-my-ajp"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8Rl-qQ-oNx">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="YSq-8g-e0G"/>
+                    <connections>
+                        <segue destination="fqO-Bi-sGF" kind="show" identifier="firetoprofile" animates="NO" id="Yc6-xX-K9y"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aPa-kY-0hL" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1068" y="-783"/>
+        </scene>
+        <!--Login Controller-->
+        <scene sceneID="BDF-8x-t8C">
+            <objects>
+                <viewController id="8kt-15-s2w" customClass="LoginController" customModule="TrendingFire" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="PZK-V3-bgO"/>
+                        <viewControllerLayoutGuide type="bottom" id="h8L-M7-QG7"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="y6t-mx-u5e">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="716"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="xNV-cc-L0t"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="k3u-j5-eCq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4593" y="282"/>
+        </scene>
+        <!--Profile View Controller-->
+        <scene sceneID="z0j-n8-Mbu">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="fqO-Bi-sGF" customClass="ProfileViewController" customModule="TrendingFire" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="doG-OB-MdC"/>
+                        <viewControllerLayoutGuide type="bottom" id="ZNl-PV-fEg"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Mwt-WQ-QB8">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="Tfa-wK-AQX"/>
+                    <connections>
+                        <segue destination="Ygt-HO-Bw2" kind="show" identifier="moveToProfileViewInfo" id="20o-eD-ngU"/>
+                        <segue destination="0hg-Qe-okT" kind="show" identifier="profiletofire" animates="NO" id="uQX-d3-vhe"/>
+                        <segue destination="p3v-RB-E6F" kind="presentation" identifier="alert" modalPresentationStyle="fullScreen" id="jnn-Ac-Ex8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oWX-8f-atp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2090" y="842"/>
+        </scene>
+    </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="Yc6-xX-K9y"/>
+        <segue reference="uQX-d3-vhe"/>
+        <segue reference="ydB-6W-8ZV"/>
+        <segue reference="jnn-Ac-Ex8"/>
+    </inferredMetricsTieBreakers>
+</document>

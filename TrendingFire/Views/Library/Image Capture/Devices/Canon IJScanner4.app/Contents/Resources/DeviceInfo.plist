@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>device info version</key>
+	<string>3.0</string>
+	<key>devices</key>
+	<dict>
+		<key>CanoScan 9000F Mark II</key>
+		<dict>
+			<key>iconFile</key>
+			<string>/Library/Printers/Canon/IJScanner/Resources/CIJIcons/CIJCanoScan9000FMarkII.icns</string>
+			<key>ColorSync profiles</key>
+			<dict>
+				<key>scanner.reflective.Gray.positive</key>
+				<dict>
+					<key>mode</key>
+					<string>Reflective Gray</string>
+					<key>path</key>
+					<string>/System/Library/ColorSync/Profiles/Generic Gray Gamma 2.2 Profile.icc</string>
+				</dict>
+				<key>scanner.reflective.RGB.positive</key>
+				<dict>
+					<key>mode</key>
+					<string>Reflective RGB</string>
+					<key>path</key>
+					<string>/System/Library/ColorSync/Profiles/sRGB Profile.icc</string>
+				</dict>
+				<key>scanner.transmissive.Gray.negative</key>
+				<dict>
+					<key>mode</key>
+					<string>Transmissive Gray Negative</string>
+					<key>path</key>
+					<string>/System/Library/ColorSync/Profiles/Generic Gray Gamma 2.2 Profile.icc</string>
+				</dict>
+				<key>scanner.transmissive.Gray.positive</key>
+				<dict>
+					<key>mode</key>
+					<string>Transmissive Gray Positive</string>
+					<key>path</key>
+					<string>/System/Library/ColorSync/Profiles/Generic Gray Gamma 2.2 Profile.icc</string>
+				</dict>
+				<key>scanner.transmissive.RGB.negative</key>
+				<dict>
+					<key>mode</key>
+					<string>Transmissive RGB Negative</string>
+					<key>path</key>
+					<string>/System/Library/ColorSync/Profiles/sRGB Profile.icc</string>
+				</dict>
+				<key>scanner.transmissive.RGB.positive</key>
+				<dict>
+					<key>mode</key>
+					<string>Transmissive RGB Positive</string>
+					<key>path</key>
+					<string>/System/Library/ColorSync/Profiles/sRGB Profile.icc</string>
+				</dict>
+			</dict>
+			<key>ButtonTypes</key>
+			<dict>
+				<key>scan</key>
+				<dict>
+					<key>application</key>
+					<string>/Applications/Canon Utilities/IJ Scan Utility/Canon IJ Scan Utility Opener.app</string>
+					<key>label</key>
+					<string> </string>
+				</dict>
+			</dict>
+			<key>functionalUnitDescriptions</key>
+			<array>
+				<dict>
+					<key>type</key>
+					<integer>0</integer>
+				</dict>
+				<dict>
+					<key>type</key>
+					<integer>1</integer>
+				</dict>
+				<dict>
+					<key>type</key>
+					<integer>2</integer>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Version</key>
+	<string>1.0</string>
+	<key>usb</key>
+	<dict>
+		<key>IOUSBDevice</key>
+		<array>
+			<dict>
+				<key>Product Identification</key>
+				<string>CanoScan 5600F</string>
+				<key>device events</key>
+				<array>
+					<string>scan</string>
+				</array>
+				<key>device type</key>
+				<string>scanner</string>
+				<key>idProduct</key>
+				<string>0x1906</string>
+				<key>idVendor</key>
+				<string>0x04a9</string>
+			</dict>
+			<dict>
+				<key>Product Identification</key>
+				<string>CanoScan LiDE 100</string>
+				<key>device events</key>
+				<array>
+					<string>scan</string>
+				</array>
+				<key>device type</key>
+				<string>scanner</string>
+				<key>idProduct</key>
+				<string>0x1904</string>
+				<key>idVendor</key>
+				<string>0x04a9</string>
+			</dict>
+			<dict>
+				<key>Product Identification</key>
+				<string>CanoScan LiDE 200</string>
+				<key>device events</key>
+				<array>
+					<string>scan</string>
+				</array>
+				<key>device type</key>
+				<string>scanner</string>
+				<key>idProduct</key>
+				<string>0x1905</string>
+				<key>idVendor</key>
+				<string>0x04a9</string>
+			</dict>
+			<dict>
+				<key>Product Identification</key>
+				<string>CanoScan LiDE 700F</string>
+				<key>device events</key>
+				<array>
+					<string>scan</string>
+				</array>
+				<key>device type</key>
+				<string>scanner</string>
+				<key>idProduct</key>
+				<string>0x1907</string>
+				<key>idVendor</key>
+				<string>0x04a9</string>
+			</dict>
+			<dict>
+				<key>Product Identification</key>
+				<string>CanoScan 9000F</string>
+				<key>device events</key>
+				<array>
+					<string>scan</string>
+				</array>
+				<key>device type</key>
+				<string>scanner</string>
+				<key>idProduct</key>
+				<string>0x1908</string>
+				<key>idVendor</key>
+				<string>0x04a9</string>
+			</dict>
+			<dict>
+				<key>Product Identification</key>
+				<string>CanoScan LiDE 110</string>
+				<key>device events</key>
+				<array>
+					<string>scan</string>
+				</array>
+				<key>device type</key>
+				<string>scanner</string>
+				<key>idProduct</key>
+				<string>0x1909</string>
+				<key>idVendor</key>
+				<string>0x04a9</string>
+			</dict>
+			<dict>
+				<key>Product Identification</key>
+				<string>CanoScan LiDE 210</string>
+				<key>device events</key>
+				<array>
+					<string>scan</string>
+				</array>
+				<key>device type</key>
+				<string>scanner</string>
+				<key>idProduct</key>
+				<string>0x190A</string>
+				<key>idVendor</key>
+				<string>0x04a9</string>
+			</dict>
+		</array>
+	</dict>
+</dict>
+</plist>
