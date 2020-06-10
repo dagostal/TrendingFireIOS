@@ -1,7 +1,27 @@
-# TrendingFireIOS
-
-Trending Fire is an IOS mobile application, where users can swipe left or right through user generated 'cards'. Each card consists of an image and description. Each card is assigned a 'rank'; a swipe left will influence the rank by -1, and a swipe right will influence the rank by +1. Each user can only influence each card once. Additionally, the rank of the card will also affect the rank of the user who created the card. Users can also save cards to their profile by swiping up. 
+91% of Artists are undiscovered. Let Trending Fire fix that.
 
 
+A new Social Network that allows artists to post their work (paintings, photography, apparel) and have consumers browse to their hearts content.
 
+
+For Artists: Post your work, and add a link to redirect consumers to your website, online shop, portfolio, etc. Consider this a search engine to increase trafficking for your content
+
+
+For Consumers: No need to leave your house to visit an art gallery. Browse Trending Fire today to casually browse through paintings and photography, while also window shopping the newest, hippest, trendiest new apparel. Who knows what you'll find
+
+
+Features:
+
+
+- Create cards for your content in either paintings, photography, or apparel
+
+- Swipe right to up vote
+
+- Swipe left to downvote
+
+- Feel free to save any card for future revisits
+
+- All Time Leaderboards to see most swiped right content
+
+- Share your cards on your preferred social media platforms
 
